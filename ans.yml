@@ -1,0 +1,79 @@
+Ressource-types:
+  - name: pull-request
+    type: docker-image
+
+    source: 
+    repository: mano8888/my-app
+
+    Resource-type:
+  - name: docker-image
+    type: details
+
+    source:
+   repository: docker-hub url
+   username: mano8888
+   passwd: manu@1406
+   check_every: 1m
+
+   webhook-token: abcd-efgh-hijk-lmno
+
+   repository: git
+   acess-token: abddsfmkamfkcaklklva
+   v3: https://github.com/mano8888/doc.git
+   v4: https://github.com/mano8888/doc.git
+   #webhook-token: ansflkgfggrkgsg,sgm., gs
+   
+   resource:
+   - name: repo
+     type: git
+
+     source: 
+   repository: https://github.com/mano8888/doc.git
+   private_key: {git-ssh-key}
+
+   jobs: 
+   - name: docker-build
+     plan:
+     - get: repo
+       trigger: true
+
+     - get: request
+       trigger: true
+
+     - put: request
+       params:
+     - path: request
+       status: pending
+
+     - task: verifying the pull-request
+       cnfig:
+       platform: linux
+       source-image:
+         type: docker-image
+
+         args:
+          - -c
+          - |
+        cat > app.sh << EOF
+        echo "hello, world"
+        EOF
+        chmod +x app.sh
+        echo "shell scripting executing"
+        ./app.sh
+
+         on-failure:
+     - put: request
+       params:
+     - path: request
+       status: filure
+
+       on-success:
+     - put: request
+       params:
+     - path: request
+       status: success
+
+    repo: /folder/doclerfile
+    tag: .git/repo/HEAD
+    #tag: .git/repo/HEAD    
+

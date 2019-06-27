@@ -1,0 +1,9 @@
+deploy:deploy-file
+-DgroupId=com.patient
+-DartifactId=patient
+-Dversion=1.0-SNAPSHOT
+-Dpackaging=war
+-DgeneratePom=false
+-Drepository=nexus
+-Durl=https://nexus-tb-patient.com/repository/doc
+-Dfile=10-SNAPSHOT.war
